@@ -33,7 +33,8 @@ module bevel_gear_pair (
 	gear1_teeth = 41,
 	gear2_teeth = 7,
 	axis_angle = 90,
-	outside_circular_pitch=1000)
+	outside_circular_pitch = 1000,
+	on_plate = true)
 {
 	outside_pitch_radius1 = gear1_teeth * outside_circular_pitch / 360;
 	outside_pitch_radius2 = gear2_teeth * outside_circular_pitch / 360;
@@ -47,6 +48,9 @@ module bevel_gear_pair (
 	echo ("pitch_angle1, pitch_angle2", pitch_angle1, pitch_angle2);
 	echo ("pitch_angle1 + pitch_angle2", pitch_angle1 + pitch_angle2);
 
+	gear2_rotation=[0, on_plate? 0 : (-pitch_angle1-pitch_angle2) ,0 ];
+	gear2_translation=[on_plate? pitch_apex2*1.3 : 0, 0, on_plate? 0 :-pitch_apex2 ];
+
 	rotate([0,0,90])
 	translate ([0,0,pitch_apex1+20])
 	{
@@ -57,8 +61,8 @@ module bevel_gear_pair (
 			pressure_angle=30,
 			outside_circular_pitch=outside_circular_pitch);
 	
-		rotate([0,-(pitch_angle1+pitch_angle2),0])
-		translate([0,0,-pitch_apex2])
+		rotate(gear2_rotation)
+		translate(gear2_translation)
 		bevel_gear (
 			number_of_teeth=gear2_teeth,
 			cone_distance=cone_distance,

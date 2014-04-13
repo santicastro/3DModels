@@ -3,7 +3,7 @@ M_PI=3.14159265359;
 
 ball_diameter=4.5+0.5;
 ball_distance=12-0.4; // center to center
-thread_diameter=2+0.4;
+thread_diameter=2+0.5;
 
 /*
 sphere(r=ball_diameter/2);
@@ -90,10 +90,13 @@ linear_extrude(height=thickness/2, convexity = 10)
     }
     union(){ // EXTRACT MATERIAL FOR BALLS AND THREAD
       //// thread_indent
+      union(){
       rotate_extrude(convexity = 10)
-      hull(){
-        translate([radius, 0, 0]) circle(d=thread_diameter);
-        translate([external_radius, 0, 0]) circle(d=thread_diameter);
+        hull(){
+          translate([radius, 0, 0]) circle(d=thread_diameter);
+          translate([external_radius, 0, 0]) circle(d=thread_diameter);
+        }
+        color("red") translate([0,0,- thread_radius])rotate([180,0,0])cylinder_round(external_radius, 0.5, 0.5);
       }
       //// ball_indent
       //for ( i = [0 : 0] )

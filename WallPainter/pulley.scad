@@ -1,4 +1,4 @@
-$fn=80;
+$fn=20;
 M_PI=3.14159265359;
 
 ball_diameter=4.5+0.5;
@@ -57,7 +57,7 @@ difference(){
 function pulley_radius(ball_count) = ball_count*ball_distance/(2*M_PI);
 function ball_diameter() = ball_diameter;
 
-module half_pulley(ball_count, thickness = ball_diameter/2){
+module half_pulley(ball_count, thickness){
   echo("Generating pulley for ", ball_count, " balls");
   perimeter=ball_count*ball_distance;
   radius=perimeter/(2*M_PI);

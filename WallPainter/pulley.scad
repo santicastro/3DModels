@@ -1,4 +1,4 @@
-$fn=20;
+//$fn=20;
 M_PI=3.14159265359;
 
 ball_diameter=4.5+0.5;
@@ -54,6 +54,7 @@ difference(){
 }
 
 
+function pulley_external_radius(ball_count) = pulley_radius(ball_count)+ball_diameter/2;
 function pulley_radius(ball_count) = ball_count*ball_distance/(2*M_PI);
 function ball_diameter() = ball_diameter;
 
@@ -71,7 +72,7 @@ module half_pulley(ball_count, thickness){
   alpha = asin(((1-cos(angle))*radius)/direct_ball_distance);
   echo("  Calculated alpha", alpha);
 
-    if(radius!=sin(alpha)*direct_ball_distance + cos(angle)*radius)
+    if(abs(radius-sin(alpha)*direct_ball_distance + cos(angle)*radius)>0.1)
     echo ("---------------- ERROR CALCULATING ANGLE -------------------------");
 /*
 color("violet")
@@ -213,7 +214,7 @@ module thread_hole(thread_radius, thickness, internal_radius, external_radius){
 
 module cylinder_round(internal_radius, height, margin){
   delta_radius=height;
-  rotate_extrude(convexity = 10)
+  rotate_extrude(convexity = 20)
   translate([internal_radius, 0, 0])rotate([90,0,0])rotate([0,180,0])
   difference() {
     translate([-margin, -margin, 0]) square(delta_radius + margin);

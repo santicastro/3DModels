@@ -19,10 +19,14 @@ cube([100,100,25], center=true);
 //translate([100, 0, 0]) half_pulley(8, 7);
 
 teethL = 38;
-teethS = 15;
+teethS = 19;
 
-showL = true;
-showS = false;
+pulley_thickness = 6.6;
+ball_count = 10;
+
+showL = false;
+showS = true;
+showHalfPulley = false;
 
 separated = true;
 
@@ -33,16 +37,30 @@ if(showL && showS){
 		translate([-45,0,0]) rotate([0,0,360/teethL/2]) WadesS();
 	}
 }else if(showS){
-	WadesS();
+	mirror([1,0,0])WadesS();
 }
 if(showL){
-	WadesL();
+	mirror([1,0,0])WadesL();
+}
+if(showHalfPulley){
+translate([0, 75,0])
+	difference(){
+	half_pulley(ball_count, pulley_thickness);
+	translate([0, 0, -5])cylinder(r = 4.1, h = 80);
+	  for ( i = [0 : 3] ){ // screw hole
+	    rotate([0,0,90*i]) translate([11, 0, -pulley_thickness]) color("blue") 
+	      union(){
+	        cylinder(d=3, h=pulley_thickness);
+			translate([0, 0, ])sphere(r=4);
+	      }
+	  }
+	}
 }
 
 module WadesL(){
 	twist = 160;
 	pressure_angle = 30;
-	pulleys_distance = 40;
+	pulleys_distance = 28;
 	hole_radius = 6;
 
 	//Large WADE's Gear
@@ -71,18 +89,18 @@ module WadesL(){
 				circles=6,
 				pressure_angle=pressure_angle,
 				twist=twist/teethL);
-			translate([0, 0, pulleys_distance]) half_pulley(8, 7);
-		 	color("red") cylinder(r=8,h=40);
+			translate([0, 0, pulleys_distance]) half_pulley(ball_count, pulley_thickness);
+		 	color("red") cylinder(r = 9, h = pulleys_distance);
 			if(!hideDetails){
-				cylinder_round(-8, 1.6, 1.6);
+				cylinder_round(-9, 1, 1);
 				cylinder_round(23.6, 1.6, 1.6);
 			}
-			translate([0, 0, pulleys_distance-3.5])
+			translate([0, 0, pulleys_distance-3.3])
 			difference(){
 				rotate_extrude(convexity = 10) //ball pulley support
 				polygon(points=[[0, 0],
-					[pulley_external_radius(8),0],
-					[0, -pulley_external_radius(8)*1.25]
+					[pulley_external_radius(ball_count),0],
+					[0, -pulley_external_radius(ball_count)*1.25]
 				]);
 				difference(){ // internal hole
 					rotate_extrude(convexity = 10)
@@ -93,7 +111,7 @@ module WadesL(){
 				}
 			}
 		}
-		union(){ // view inside%cube([200,200,200]);
+		union(){ // view inside% cube([200,200,200]);
 			translate([0, 0, -5])cylinder(r = 4.1, h = 80);
 			translate([0, 0, -4])
 			rotate_extrude(convexity = 10)
@@ -103,6 +121,13 @@ module WadesL(){
 				[hole_radius, hole_radius*1.25]
 				]);
 		}
+		translate([0, 0, pulleys_distance])
+  		for ( i = [0 : 3] ){ // screw hole
+  		  rotate([0,0,90*i]) translate([11, 0, -pulley_thickness]) color("blue") 
+      		union(){
+        			cylinder(d=3, h=pulley_thickness);
+     		}
+  		}
 	}
 }
 
@@ -116,9 +141,9 @@ pressure_angle=30;
 			circular_pitch=268,
 			gear_thickness = 5,
 			rim_thickness = 5,
-			hub_thickness = 15,
+			hub_thickness = 11.5,
 			hub_diameter = 20,
-			bore_diameter = 5.2,
+			bore_diameter = 5.4,
 			circles=0,
 			pressure_angle=pressure_angle,
 			twist=twist/teethS);
@@ -129,14 +154,14 @@ pressure_angle=30;
 			rim_thickness = 5,
 			hub_thickness = 0,
 			hub_diameter = 20,
-			bore_diameter = 5.2,
+			bore_diameter = 5.4,
 			circles=0,
 			pressure_angle=pressure_angle,
 			twist=twist/teethS);
 		
 	}
 	// screw
-		translate([0,-5,10.5])cube([5.8,2.3,9.5],center = true);
-		translate([0,0,11])rotate([0,90,-90])cylinder(r=1.7,h=20);
+		translate([0,-5.4,10.5])cube([6,2.4,12.5],center = true);
+		translate([0,0,8])rotate([0,90,-90])cylinder(r=1.6,h=20);
 	}
 }

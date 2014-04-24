@@ -1,8 +1,8 @@
 use <pulley.scad>
-use <mendel_misc.inc>
+//use <mendel_misc.inc>
 use <parametric_involute_gear_v5.0.scad>
 
-$fn = 80;
+$fn = 20;
 hideDetails = false;
 //pulley(10);
 //echo("proba", pulley_radius(10), "  ");
@@ -25,8 +25,9 @@ pulley_thickness = 6.6;
 ball_count = 10;
 
 showL = false;
-showS = true;
+showS = false;
 showHalfPulley = false;
+showMain = true;
 
 separated = true;
 
@@ -37,13 +38,13 @@ if(showL && showS){
 		translate([-45,0,0]) rotate([0,0,360/teethL/2]) WadesS();
 	}
 }else if(showS){
-	mirror([1,0,0])WadesS();
+	WadesS();
 }
 if(showL){
-	mirror([1,0,0])WadesL();
+	WadesL();
 }
 if(showHalfPulley){
-translate([0, 75,0])
+	translate([0, 75,0])
 	difference(){
 	half_pulley(ball_count, pulley_thickness);
 	translate([0, 0, -5])cylinder(r = 4.1, h = 80);
@@ -56,7 +57,98 @@ translate([0, 75,0])
 	  }
 	}
 }
+show_motors = false;
+wall_thick = 1.5;
+if(showMain){
+half_chasis();
+translate([63,0,0])mirror([1,0,0])half_chasis();
+}
 
+
+module half_chasis(){
+	translate([0, 43, 0])
+	union(){
+		difference(){
+			cylinder(r=7, h=10);
+			translate([0, 0, 1.2])
+			cylinder(r=4.1, h=16);
+		}
+		cylinder_round(-7, 4, 1);
+
+		translate([32, 0, 0])
+			intersection(){
+				translate([-9, 0, 0])cube([9, 9, 22.5]);
+				cylinder(r=9, h=22.5);
+			}
+		translate([32, 0, 0])
+			semiarc(9, 22.5, wall_thick, 90, 180);
+		semiarc(21.5, 22.5, wall_thick, 235, 360);
+		translate([-18.5, -26.7, 0]) color("red")
+			semiarc(9.5, 22.5, wall_thick, 55, 180);
+		translate([-27.9-wall_thick, -26.4-30, 0])
+			cube([wall_thick, 30, 22.5]);
+	}
+	if(show_motors){
+	%	motor();
+	}
+	color("blue")
+	difference(){
+	union(){
+		translate([-12.5, 16, 0]) cube([25, 5, 22.5]);
+		intersection(){
+			translate([16,-12.5,  0])cube([8, 25, 10]);
+			translate([16,-12.5, -2.5]) rotate([0, -15, 0])cube([8, 25, 15]);
+		}
+		mirror([1,0,0])
+		intersection(){
+			translate([16,-12.5,  0])cube([8, 25, 10]);
+			translate([16,-12.5, -2.5]) rotate([0, -15, 0])cube([8, 25, 15]);
+		}
+		translate([-28, 6, 0]) 
+		difference(){
+			cube([10, 12, 34]);
+			translate([5, 6, 19])cylinder(d=3, h=15);
+		}
+		translate([-28, -18, 0])
+		difference(){
+			cube([10, 12, 34]);
+			translate([5, 6, 19])cylinder(d=3, h=15);
+		}
+	}
+	motor();
+	}
+// FONDO
+	color("violet")
+	translate([0, 0, -2.4])
+	linear_extrude(height = 2.4)
+	difference(){
+		polygon(points=[
+			[32, 60],
+			[-8, 60],
+			[-28-wall_thick, 36.5],
+			[-28-wall_thick, -27],
+			[-8, -49],
+			[32, -49],
+			[32, -10],
+			[24, -10],
+			[24, 30],
+			[32, 30]
+		]);
+		circle(r=12);
+		polygon(points=[
+			[-10, -20],
+			[-10, -40],
+			[28, -40],
+			[28, -20]
+		]);
+	}
+}
+
+module motor(){
+	cylinder(r=2.5, h=54);
+	cylinder(r=11.3, h=36);
+	translate([-18, -18, 0]) cube([36, 36, 34]);
+}
 module WadesL(){
 	twist = 160;
 	pressure_angle = 30;
@@ -165,3 +257,34 @@ pressure_angle=30;
 		translate([0,0,8])rotate([0,90,-90])cylinder(r=1.6,h=20);
 	}
 }
+
+module semiarc(r, h, weight, angle_start, angle_finish){
+	angle = angle_finish - angle_start;
+	distance=(r+weight)*1.5;
+
+	rotate([0, 0, angle_start])
+	intersection(){
+		rotate_extrude(convexity = 10)
+		translate([r, 0, 0]) square([weight,h]);
+		if(angle<360){
+			linear_extrude(height=h)
+			if(angle>180){
+				polygon(points=[[0,0], 
+				[distance,0],
+				[0, distance],
+				[-distance, 0],
+				[0, -distance],
+				[distance*cos(angle), distance*sin(angle)]
+				]);
+			}else{
+				polygon(points=[[0,0], 
+				[distance,0],
+				[0, distance],
+				[distance*cos(angle), distance*sin(angle)]
+				]);
+			}
+		}
+	}
+}
+
+	

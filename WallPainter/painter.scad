@@ -1,5 +1,5 @@
 use <pulley.scad>
-//use <mendel_misc.inc>
+use <common.scad>
 use <parametric_involute_gear_v5.0.scad>
 
 $fn = 20;

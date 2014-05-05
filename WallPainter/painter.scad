@@ -89,7 +89,7 @@ module half_chasis(){
 			cube([wall_thick, 30, 22.5]);
 	}
 	if(show_motors){
-	%	motor();
+	%	nema14();
 	}
 	color("blue")
 	difference(){
@@ -115,7 +115,7 @@ module half_chasis(){
 			translate([5, 6, 19])cylinder(d=3, h=15);
 		}
 	}
-	motor();
+	nema14();
 	}
 // FONDO
 	color("violet")

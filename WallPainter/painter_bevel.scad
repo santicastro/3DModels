@@ -2,8 +2,10 @@ use <pulley.scad>
 use <common.scad>
 use <parametric_involute_gear_v5.0.scad>
 
+show_gears=true;
+
 	gear1_teeth = 25;
-	gear2_teeth = 7;
+	gear2_teeth = 8;
 	axis_angle = 45;
     bore_diameter = 5.25;
 	outside_circular_pitch=400;
@@ -23,32 +25,49 @@ use <parametric_involute_gear_v5.0.scad>
 	echo ("pitch_angle1, pitch_angle2", pitch_angle1, pitch_angle2);
 	echo ("pitch_angle1 + pitch_angle2", pitch_angle1 + pitch_angle2);
 
-	rotate([0,0,90])
-	translate ([0,0,pitch_apex1+20])
-	{
-		translate([0,0,-pitch_apex1])
-		intersection(){
-		bevel_gear (
-			number_of_teeth=gear1_teeth,
-			cone_distance=cone_distance,
-			pressure_angle=30,
-			outside_circular_pitch=outside_circular_pitch);
-		cylinder(r=28, h=20);
-		}
+	if(show_gears){
+		// GEARS
+		rotate([0,0,90])
+		translate ([0,0,pitch_apex1+20])
+		{
+			translate([0,0,-pitch_apex1])
+			intersection(){
+			bevel_gear (
+				number_of_teeth=gear1_teeth,
+				cone_distance=cone_distance,
+				pressure_angle=30,
+				outside_circular_pitch=outside_circular_pitch);
+			cylinder(r=28, h=20);
+			}
+		
+			translate([0, 0, -50]) mirror([0, 0, 1]) {
+				half_pulley(ball_count, pulley_thickness);
+				mirror([0, 0, 1])half_pulley(ball_count, pulley_thickness);
+			}
 	
-		translate([0, 0, -50]) mirror([0, 0, 1]) {
-			half_pulley(ball_count, pulley_thickness);
-			mirror([0, 0, 1])half_pulley(ball_count, pulley_thickness);
-		}
-
-		rotate([0,-(pitch_angle1+pitch_angle2),0])
-		translate([0,0,-pitch_apex2])
-		union(){
-		bevel_gear (
-			number_of_teeth=gear2_teeth,
-			cone_distance=cone_distance,
-			pressure_angle=30,
-			outside_circular_pitch=outside_circular_pitch);
-		#translate([0,0,-38]) {nema17(true); nema14(true);}
+			rotate([0,-(pitch_angle1+pitch_angle2),0])
+			translate([0,0,-pitch_apex2])
+			union(){
+			bevel_gear (
+				number_of_teeth=gear2_teeth,
+				cone_distance=cone_distance,
+				pressure_angle=30,
+				outside_circular_pitch=outside_circular_pitch);
+			#translate([0,0,-40]) {nema17(true, true, true);}
+			}
 		}
 	}
+wall_thick = 1.5;
+// chassis
+	translate([0, 0, -17])
+	{
+		difference(){
+			cylinder(r=7, h=23);
+			translate([0, 0, 1.2])
+			cylinder(r=4.1, h=23);
+		}
+		cylinder_round(-7, 4, 1);
+		semiarc(21.5, 30, wall_thick, 0, 360);
+		
+	}
+		

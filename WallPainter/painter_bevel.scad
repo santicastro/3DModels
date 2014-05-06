@@ -49,6 +49,6 @@ use <parametric_involute_gear_v5.0.scad>
 			cone_distance=cone_distance,
 			pressure_angle=30,
 			outside_circular_pitch=outside_circular_pitch);
-		#translate([0,0,-38]) nema17();
+		#translate([0,0,-38]) {nema17(true); nema14(true);}
 		}
 	}

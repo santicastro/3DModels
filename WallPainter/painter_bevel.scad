@@ -30,44 +30,57 @@ show_gears=true;
 		rotate([0,0,90])
 		translate ([0,0,pitch_apex1+20])
 		{
+			// BIG GEAR
 			translate([0,0,-pitch_apex1])
 			intersection(){
 			bevel_gear (
 				number_of_teeth=gear1_teeth,
 				cone_distance=cone_distance,
 				pressure_angle=30,
+				bore_diameter=8,
 				outside_circular_pitch=outside_circular_pitch);
-			cylinder(r=28, h=20);
+			cylinder(r1=27, r2=47, h=20);
 			}
-		
-			translate([0, 0, -50]) mirror([0, 0, 1]) {
+			translate([0, 0, -50])cylinder(r1=21, r2=21, h=10);
+			translate([0, 0, -53]) mirror([0, 0, 1]) {
 				half_pulley(ball_count, pulley_thickness);
 				mirror([0, 0, 1])half_pulley(ball_count, pulley_thickness);
 			}
-	
-			rotate([0,-(pitch_angle1+pitch_angle2),0])
+			
+			//SMALL GEAR
+			rotate([0,(pitch_angle1+pitch_angle2),0])
 			translate([0,0,-pitch_apex2])
-			union(){
+			{
 			bevel_gear (
 				number_of_teeth=gear2_teeth,
 				cone_distance=cone_distance,
 				pressure_angle=30,
 				outside_circular_pitch=outside_circular_pitch);
-			#translate([0,0,-40]) {nema17(true, true, true);}
+			translate([0,0,-6])
+			rotate([0,0,22.5])difference(){
+				cylinder(r=11, h=6);
+				cylinder(d=bore_diameter, h=6);
+				translate([-15,10,0])cube([30,10,6]);
+				mirror([0,1,0])translate([-15,10,0])cube([30,10,6]);
+				// screws
+				translate([0,4,3])rotate([-90,0,0]) m3_hole();
+				translate([0,-4,3])rotate([-90,0,180]) m3_hole();
+			}
+			#translate([0,0,-42.2]) {nema17(true, true, true);}
 			}
 		}
+
 	}
 wall_thick = 1.5;
 // chassis
 	translate([0, 0, -17])
 	{
 		difference(){
-			cylinder(r=7, h=23);
+			cylinder(r=7, h=22.3);
 			translate([0, 0, 1.2])
 			cylinder(r=4.1, h=23);
 		}
 		cylinder_round(-7, 4, 1);
-		semiarc(21.5, 30, wall_thick, 0, 360);
+		//#semiarc(21.5, 30, wall_thick, 0, 360);
 		
 	}
-		

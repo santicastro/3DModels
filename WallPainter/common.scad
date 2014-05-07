@@ -2,7 +2,14 @@ use <common.scad>
 
 $fn=20;
 
-nema17(true, true, true);
+		
+module m3_hole(){
+	translate([-3, -3, 0])
+	cube([6, 12.5, 2.4]);
+	translate([0,0,-4])cylinder(r=1.6,h=16);
+}
+m3_hole();
+//nema17(true, true, true);
 module nema14(show_screws = false, show_body=true){
 	if(show_body){
 		cylinder(r=2.5, h=54);
@@ -18,6 +25,7 @@ module nema14(show_screws = false, show_body=true){
 }
 
 module nema17(show_screws = false, show_body=true, big_holes=false){
+	screw_holes_length = 10;
 	if(show_body){
 		cylinder(r=2.5, h=34+24);
 		cylinder(r=11.3, h=34+2);
@@ -25,20 +33,20 @@ module nema17(show_screws = false, show_body=true, big_holes=false){
 	}
 	if(show_screws){
 		hull(){
-			translate([15.5, 15.5, 34]) cylinder(r=1.55, h=10);
-			if(big_holes) translate([13, 13, 34]) cylinder(r=1.55, h=10);
+			translate([15.5, 15.5, 34]) cylinder(r=1.55, h=screw_holes_length);
+			if(big_holes) translate([13, 13, 34]) cylinder(r=1.55, h=screw_holes_length);
 		}
 		hull(){
-			translate([-15.5, 15.5, 34]) cylinder(r=1.55, h=10);
-			if(big_holes) translate([-13, 13, 34]) cylinder(r=1.55, h=10);
+			translate([-15.5, 15.5, 34]) cylinder(r=1.55, h=screw_holes_length);
+			if(big_holes) translate([-13, 13, 34]) cylinder(r=1.55, h=screw_holes_length);
 		}
 		hull(){
-			translate([15.5, -15.5, 34]) cylinder(r=1.55, h=10);
-			if(big_holes) translate([13, -13, 34]) cylinder(r=1.55, h=10);
+			translate([15.5, -15.5, 34]) cylinder(r=1.55, h=screw_holes_length);
+			if(big_holes) translate([13, -13, 34]) cylinder(r=1.55, h=screw_holes_length);
 		}
 		hull(){
-			translate([-15.5, -15.5, 34]) cylinder(r=1.55, h=10);
-			if(big_holes) translate([-13, -13, 34]) cylinder(r=1.55, h=10);
+			translate([-15.5, -15.5, 34]) cylinder(r=1.55, h=screw_holes_length);
+			if(big_holes) translate([-13, -13, 34]) cylinder(r=1.55, h=screw_holes_length);
 		}
 		
 	}

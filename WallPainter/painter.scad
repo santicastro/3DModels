@@ -81,10 +81,10 @@ module half_chasis(){
 				cylinder(r=9, h=22.5);
 			}
 		translate([32, 0, 0])
-			semiarc(9, 22.5, wall_thick, 90, 180);
-		semiarc(21.5, 22.5, wall_thick, 235, 360);
+			cube_semiarc(9, 22.5, wall_thick, 90, 180);
+		cube_semiarc(21.5, 22.5, wall_thick, 235, 360);
 		translate([-18.5, -26.7, 0]) color("red")
-			semiarc(9.5, 22.5, wall_thick, 55, 180);
+			cube_semiarc(9.5, 22.5, wall_thick, 55, 180);
 		translate([-27.9-wall_thick, -26.4-30, 0])
 			cube([wall_thick, 30, 22.5]);
 	}
@@ -257,34 +257,3 @@ pressure_angle=30;
 		translate([0,0,8])rotate([0,90,-90])cylinder(r=1.6,h=20);
 	}
 }
-
-module semiarc(r, h, weight, angle_start, angle_finish){
-	angle = angle_finish - angle_start;
-	distance=(r+weight)*1.5;
-
-	rotate([0, 0, angle_start])
-	intersection(){
-		rotate_extrude(convexity = 10)
-		translate([r, 0, 0]) square([weight,h]);
-		if(angle<360){
-			linear_extrude(height=h)
-			if(angle>180){
-				polygon(points=[[0,0], 
-				[distance,0],
-				[0, distance],
-				[-distance, 0],
-				[0, -distance],
-				[distance*cos(angle), distance*sin(angle)]
-				]);
-			}else{
-				polygon(points=[[0,0], 
-				[distance,0],
-				[0, distance],
-				[distance*cos(angle), distance*sin(angle)]
-				]);
-			}
-		}
-	}
-}
-
-	

@@ -1,4 +1,6 @@
-//$fn=20;
+use <common.scad>
+
+$fn=20;
 M_PI=3.14159265359;
 
 ball_diameter=4.5+0.5;
@@ -24,15 +26,15 @@ echo("pulley1_ball_bearing_height",pulley1_ball_bearing_height);
 
 pulley2_ball_bearing_height = ball_bearing_height-pulley1_ball_bearing_height;
 
-ball_count = 12;
+ball_count = 10;
 
 difference(){
   half_pulley(ball_count, pulley_thickness);
   translate([0,0,-pulley_thickness/2]) cylinder(d=18, h=pulley_thickness/2); //ball bearing
   translate([0,0,-pulley1_ball_bearing_height]) cylinder(d=ball_bearing_diameter, h=pulley1_ball_bearing_height); //ball bearing
   
-  for ( i = [0 : 2] ){ // screw hole with head
-    rotate([0,0,75+120*i]) translate([15.5, 0, -pulley_thickness/2]) color("blue") 
+  for ( i = [0 : 3] ){ // screw hole with head
+    rotate([0,0,90*i]) translate([13.5, 0, -pulley_thickness/2]) color("blue") 
       union(){
         cylinder(d=3, h=pulley_thickness);
         cylinder(d=5.7, h=pulley_thickness/4);
@@ -45,8 +47,8 @@ difference(){
   half_pulley(ball_count, pulley_thickness);
   translate([0,0,-pulley_thickness/2]) cylinder(d=15, h=pulley_thickness/2); //ball bearing
   translate([0,0,-pulley2_ball_bearing_height]) cylinder(d=ball_bearing_diameter, h=pulley2_ball_bearing_height); //ball bearing
-  for ( i = [0 : 2] ){ // screw hole
-    rotate([0,0,75+120*i]) translate([15.5, 0, -pulley_thickness/2]) color("blue") 
+  for ( i = [0 : 3] ){ // screw hole
+    rotate([0,0,90*i]) translate([13.5, 0, -pulley_thickness/2]) color("blue") 
       union(){
         cylinder(d=3, h=pulley_thickness);
       }
@@ -210,14 +212,4 @@ module thread_hole(thread_radius, thickness, internal_radius, external_radius){
     circle(r=thread_radius, h=0);  
     polygon(points=points);
   }  
-}
-
-module cylinder_round(internal_radius, height, margin){
-  delta_radius=height;
-  rotate_extrude(convexity = 20)
-  translate([internal_radius, 0, 0])rotate([90,0,0])rotate([0,180,0])
-  difference() {
-    translate([-margin, -margin, 0]) square(delta_radius + margin);
-    translate([delta_radius,delta_radius,0]) circle(delta_radius);
-  }
 }

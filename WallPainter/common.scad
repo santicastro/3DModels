@@ -1,11 +1,13 @@
 use <common.scad>
 
-$fn=20;
+//$fn=20;
 
 		
 module m3_hole(){
-	translate([-3, -3, 0])
-	cube([6, 12.5, 2.4]);
+	translate([-2.85, -2.85, 0])linear_extrude(2.35) union(){
+		square([5.7, 12.5]);
+		polygon(points=[[0,0], [5.7, 0], [2.85, -1]]);
+	}
 	translate([0,0,-4])cylinder(r=1.6,h=16);
 }
 m3_hole();
@@ -106,7 +108,3 @@ module complex_cylinder_round(internal_radius, height, margin){
   translate([internal_radius, 0, 0])rotate([90,0,0])rotate([0,180,0])
   children(0);
 }
-
-semiarc(21.5+0.8, 30, 1.5, 0, 185) { 
-					%square(1.5);
-				};

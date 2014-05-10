@@ -2,7 +2,7 @@ use <pulley.scad>
 use <common.scad>
 use <parametric_involute_gear_v5.0.scad>
 
-$fn=15;
+$fn=60;
 
 	gear1_teeth = 25;
 	gear2_teeth = 8;
@@ -30,7 +30,7 @@ half_pulley_moved = 0; //0 false, 1 true
 half_pulley_translation = [100 * half_pulley_moved, 0, 0];
 half_pulley_rotation = [0, 0, 0];
 
-show_small_gear = true;
+show_small_gear = false;
 small_gear_moved = 0; //0 false, 1 true
 small_gear_translation = [150 * small_gear_moved, 0, 0];
 small_gear_rotation = [0, -45 * small_gear_moved, 0];
@@ -124,7 +124,7 @@ show_chassis = true;
 
 		//SMALL GEAR
 		translate(small_gear_translation)rotate(small_gear_rotation)
-rotate([0,0,-10]) 
+rotate([0,0,-9]) 
 		if(show_small_gear){
 			rotate([0,(pitch_angle1+pitch_angle2),0])
 			translate([0,0,-pitch_apex2])
@@ -145,26 +145,43 @@ rotate([0,0,-10])
 					translate([0,-4,3])rotate([-90,0,180]) m3_hole();
 				}
 				
-				if(small_gear_moved==0) translate([0,0,-42.2]) {nema17(true, true, true);}
+				if(small_gear_moved==0) translate([0,0,-42.2]) nema17(true, true, true);
 			}
 		}
 	}
 	wall_thick = 1.5;
 	// chassis
 	if(show_chassis){
-		translate([0, 0, -17])
+		half_chassis();
+		translate([61, 0, 0])mirror([1,0, 0])half_chassis();
+		
+
+		translate([54, -70, 3])rotate([-90, 0, 108]){
+			difference(){ union(){ cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);} cylinder(d=3.2, h=4); }
+			translate([0, 0, 15]){ difference(){ union(){ cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);} cylinder(d=3.2, h=4); }}
+		}
+
+		
+	}
+module half_chassis(){
+	difference(){
 		union(){
 			difference(){
-				cylinder(r=7, h=21.9);
-				translate([0, 0, 1.2])
-				cylinder(r=4.1, h=23);
+				union(){
+					difference(){
+						cylinder(r=7, h=21.9);
+						translate([0, 0, 1.2])
+						cylinder(r=4.1, h=23);
+					}
+					translate([0, 7.5, 4])cube([8, 5, 10], center=true);
+					cylinder_round(-7, 4, 1);
+					translate([0,0,18])
+						semiarc(21.5+0.8, 30, wall_thick, 180, 225) { 
+							double_hole_border(wall_thick);
+						};
+				}
+				translate([0, 5, 6])rotate([90, 0, 180])m3_hole();
 			}
-			cylinder_round(-7, 4, 1);
-			translate([0,0,18])
-				semiarc(21.5+0.8, 30, wall_thick, 180, 225) { 
-					double_hole_border(wall_thick);
-				};
-			
 			translate([0,0,18])
 				semiarc(21.5+0.8, 30, wall_thick, 10, 120) { 
 					double_hole_border(wall_thick);
@@ -174,14 +191,73 @@ rotate([0,0,-10])
 				cube_semiarc(21.5, 31.15, wall_thick, 0, 360);
 				translate([0,0,21])semiarc(21.5+0.8, 30, wall_thick, 0, 120) { square([pulley_thickness,pulley_thickness]); };
 				translate([0,0,21])semiarc(21.5+0.8, 30, wall_thick, 180, 225) { square([pulley_thickness,pulley_thickness]); };
+				translate([0, 25, 6])rotate([0,45,0])cube([6, 20, 6], center=true);
 			}
-			translate([32, 0, 0])
-			cube_semiarc(9, 31.15, wall_thick, 90, 180);
+			translate([31, 0, 0])
+			cube_semiarc(8, 31.15, wall_thick, 90, 180);
 			translate([-18.5, -26.7, 0]) color("red")
 			cube_semiarc(9.5, 31.15, wall_thick, 55, 180);
 		
-		}
+			difference(){
+			rotate([0, 0, -9])translate([0, -63.95, 13.45])
+			union() {
+				intersection(){
+					rotate([-45, 0, 0])translate([1.5,2,17.5])cube([42, 42, 37], center=true);
+					union(){
+						translate([45/2-1, 11, -17])cube([2, 8, 70]);
+						rotate([-45, 0, 0])translate([0,0,17]) {
+							translate([8, -22, 17]){ cube([15, 45, 2]); translate([-31,29,0])cube([35, 17, 2]);}
+							difference(){translate([-10, 0, -19]) cube([20.3, 22, 2]); translate([0, 0, -20])cylinder(d=10, h=20);} 
+							translate([-23, 21.3, -19]){ cube([46, 1.6, 36]);}
+						}
+					}
+				}
+				translate([-10, -0.5, -17])cube([1.2, 16, 16]);
+				translate([9, -0.5, -17])cube([1.2, 16, 16]);
+
+				translate([-19.5, 15, -17])cube([1.2, 26, 26]);
+				translate([21.5, 11, -17])difference() {cube([1, 30, 26]); rotate([45, 0, 0])translate([0, 8, -2])cube([1, 30, 26]);};
+				
+			}
+			rotate([0, 0, -9])translate([0, -63.95, 13.45])
+				rotate([-45, 0, 0])nema17(true, true, true);
+			}
+			
+			// B A C K G R O U N D
+			translate([0, 0, -2.4]){
+				cylinder(r=21.5+wall_thick, h=2.4);
+				translate([31, 0, 0])	cylinder(r=8+wall_thick, h=2.4);
+translate([0, -60, 0])
+linear_extrude(height = 2.4)
+	difference(){
+		polygon(points=[
+			[32, 60],
+			[-8, 60],
+			[-28-wall_thick, 36.5],
+			[-28-wall_thick, -27],
+			[-28-wall_thick, -49],
+			[32, -49],
+			[32, 20],
+			[24, 20],
+			[24, 40],
+			[32, 40]
+		]);
+		//circle(r=12);
+		polygon(points=[
+			[-23, -20],
+			[-23, -43],
+			[28, -43],
+			[28, -20]
+		]);
 	}
+			}
+		}
+		translate([0, 0, -5-2.4])cube([200, 300, 10], center=true);
+translate([0,0,-3])cylinder(r=3, h=5);
+	}
+}
+
+
 
 module hole_border(size){
 	translate([0, size, 0]) 

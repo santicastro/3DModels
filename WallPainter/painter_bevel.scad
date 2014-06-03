@@ -171,7 +171,7 @@ module half_chassis(){
 					difference(){
 						cylinder(r=7, h=21.9);
 						translate([0, 0, 1.2])
-						cylinder(r=4.1, h=23);
+						cylinder(r=4.18, h=23);
 					}
 					translate([0, 7.5, 4])cube([8, 5, 10], center=true);
 					cylinder_round(-7, 4, 1);

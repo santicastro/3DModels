@@ -154,20 +154,19 @@ rotate([0,0,-9])
 	if(show_chassis){
 		half_chassis();
 		translate([61, 0, 0])mirror([1,0, 0])half_chassis();
-		
-
-		translate([54, -70, 3])rotate([-90, 0, 108]){
-			difference(){ union(){ cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);} cylinder(d=3.2, h=4); }
-			translate([0, 0, 15]){ difference(){ union(){ cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);} cylinder(d=3.2, h=4); }}
-		}
-
-		
+		//translate([21, -50, 3])rotate([-90, 0, -90]){
+		//	difference(){ union(){ cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);} cylinder(d=3.2, h=4); }
+		//	translate([0, 0, 15]){ difference(){ union(){ cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);} cylinder(d=3.2, h=4); }}
+		//}
 	}
 module half_chassis(){
 	difference(){
 		union(){
 			difference(){
 				union(){
+translate([5,0,0])cube([17, 1.3, 15]);
+translate([-22,0,0])cube([17, 1.3, 15]);
+
 					difference(){
 						cylinder(r=7, h=21.9);
 						translate([0, 0, 1.2])
@@ -202,9 +201,12 @@ module half_chassis(){
 			rotate([0, 0, -9])translate([0, -63.95, 13.45])
 			union() {
 				intersection(){
-					rotate([-45, 0, 0])translate([1.5,2,17.5])cube([42, 42, 37], center=true);
+					rotate([-45, 0, 0])translate([2.5,2,17.5])cube([44, 42, 37], center=true);
 					union(){
-						translate([45/2-1, 11, -17])cube([2, 8, 70]);
+						translate([45/2-1, 11, -17]) difference(){
+								cube([4, 8, 70]);
+								translate([13, 9, 0]) cylinder(r=12, h=70);
+							}
 						rotate([-45, 0, 0])translate([0,0,17]) {
 							translate([8, -22, 17]){ cube([15, 45, 2]); translate([-31,29,0])cube([35, 17, 2]);}
 							difference(){translate([-10, 0, -19]) cube([20.3, 22, 2]); translate([0, 0, -20])cylinder(d=10, h=20);} 

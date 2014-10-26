@@ -49,6 +49,8 @@ pitch_angle2 = asin (outside_pitch_radius2 / cone_distance);
 echo ("pitch_angle1, pitch_angle2", pitch_angle1, pitch_angle2);
 echo ("pitch_angle1 + pitch_angle2", pitch_angle1 + pitch_angle2);
 
+base_thick = 2.4;
+
 // GEARS
 rotate([0,0,90])
 translate ([0,0,pitch_apex1+20]) {
@@ -155,65 +157,87 @@ translate ([0,0,pitch_apex1+20]) {
 wall_thick = 1.5;
 // chassis
 if(show_chassis) {
-  half_chassis();
+  half_chassis(isLeft=1);
   translate([61, 0, 0])mirror([1,0, 0])half_chassis();
   /*translate([21, -50, 3])rotate([-90, 0, -90]) {
     difference() {
-      union() { cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);
+      union() {
+        cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);
       } cylinder(d=3.2, h=4);
     }
     translate([0, 0, 15]) {
       difference() {
-        { cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);
+        {
+          cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);
         } cylinder(d=3.2, h=4);
       }
     }
   }*/
 }
-module half_chassis() {
+module half_chassis(isLeft=0) {
+  wall_angle=60;
   difference() {
     union() {
       difference() {
         union() {
-          translate([5,0,0])cube([17, 1.3, 15]);
-          translate([-22,0,0])cube([17, 1.3, 15]);
+          for (z = [0, -90, 180]) {
+            rotate([0, 0, z])translate([-20.5,0,0])difference() {
+              translate([0, -0.75, 0])cube([16, 1.5, 16]);
+              rotate([0, wall_angle])cube([26,5,14], center=true);
+            }
+          }
           
           difference() {
             cylinder(r=7, h=21.9);
             translate([0, 0, 1.2])
             cylinder(r=4.18, h=23);
           }
-          translate([0, 7.5, 4])cube([8, 5, 10], center=true);
-          cylinder_round(-7, 4, 1);
-          translate([0,0,18])
-          semiarc(21.5+0.8, 30, wall_thick, 180, 225) {
+          //m3 translate([0, 7.5, 4])cube([8, 5, 10], center=true);
+          //%cylinder_round(-7, 4, 1);
+          translate([0,0,18])semiarc(21.5+0.8, 30, wall_thick, 180, 225) {
             double_hole_border(wall_thick);
-          };
+          }
         }
-        translate([0, 5, 6])rotate([90, 0, 180])m3_hole();
+        //m3 translate([0, 5, 6])rotate([90, 0, 180])m3_hole();
+        if(isLeft==1){
+	   translate([13.5, -2, 0])cube([4,3,20]);
+ 	   translate([-5, -10.5, 0])cube([15, 5, 18]);
+        }
       }
       translate([0,0,18])
       semiarc(21.5+0.8, 30, wall_thick, 10, 120) {
         double_hole_border(wall_thick);
       };
-      
       difference() {
-        cube_semiarc(21.5, 31.15, wall_thick, 0, 360);
+        semiarc(21.5, 31.15, wall_thick, 0-isLeft*5, 360-isLeft*125) {
+          translate([0, 18, 0]) {
+            square([wall_thick,31.15-18]);
+            translate([wall_thick,0 ,0])rotate([0, 0, 90+wall_angle])square([wall_thick+0.25,18*1.41]);
+          }
+        }
         translate([0,0,21])semiarc(21.5+0.8, 30, wall_thick, 0, 120) {
           square([pulley_thickness,pulley_thickness]);
         };
         translate([0,0,21])semiarc(21.5+0.8, 30, wall_thick, 180, 225) {
           square([pulley_thickness,pulley_thickness]);
         };
-        translate([0, 25, 6])rotate([0,45,0])cube([6, 20, 6], center=true);
+        /*translate([0, 25, 6])rotate([0,45,0])cube([6, 20, 6], center=true);*/
+	if(isLeft==1){
+	   translate([13.5, -2, 0])cube([4,3,20]);
+        }
       }
-      translate([31, 0, 0])
-      cube_semiarc(8, 31.15, wall_thick, 90, 180);
-      translate([-18.5, -26.7, 0]) color("red")
-      cube_semiarc(9.5, 31.15, wall_thick, 55, 180);
+      //translate([31, 0, 0])cube_semiarc(8, 31.15, wall_thick, 90, 180);
+      translate([22.5, -2, 18])difference(){
+	      cube([8, 6.25, 13]);
+	      translate([8, 0, 5.25])rotate([90, 0, 0])cylinder(d=10, h=30, center=true);
+	      translate([5.8, -1, 0])rotate([0, 23, 0])cube([10, 20, 10], center=true);
+	      translate([11.8, -1, 7.8])rotate([0, 55, 0])cube([10, 20, 10], center=true);
+      }
+      translate([-18.5+1, -26.7+1.4, 0]) color("red")
+      cube_semiarc(9.5-2, 31.15, wall_thick, 55, 140);
       
-      difference() {
-        translate([0, -63.95, 13.45])
+      %difference() {
+        rotate([0, 0, -9])translate([0, -63.95, 13.45])
         union() {
           intersection() {
             rotate([-45, 0, 0])translate([2.5,2,17.5])cube([44, 42, 37], center=true);
@@ -236,16 +260,16 @@ module half_chassis() {
           translate([9, -0.5, -17])cube([1.2, 16, 16]);
           
         }
-        translate([0, -63.95, 13.45])
+        rotate([0, 0, -9])translate([0, -63.95, 13.45])
         rotate([-45, 0, 0])nema17(true, true, true);
       }
       
       // B A C K G R O U N D
-      translate([0, 0, -2.4]) {
-        cylinder(r=21.5+wall_thick, h=2.4);
-        translate([31, 0, 0])	cylinder(r=8+wall_thick, h=2.4);
-        translate([0, -60, 0])
-        linear_extrude(height = 2.4)
+      translate([0, 0, -base_thick]) {
+        cylinder(r=11+wall_thick, h=base_thick);
+        //translate([31, 0, 0])	cylinder(r=8+wall_thick, h=base_thick);
+        /*translate([0, -60, 0])
+        linear_extrude(height = base_thick)
         difference() {
           polygon(points=[
           [32, 60],
@@ -256,14 +280,7 @@ module half_chassis() {
           [32, -49],
           [32, 40]
           ]);
-          //circle(r=12);
-          polygon(points=[
-          [-23, -20],
-          [-23, -43],
-          [28, -43],
-          [28, -20]
-          ]);
-        }
+        }*/
       }
     }
     translate([0, 0, -5-2.4])cube([200, 300, 10], center=true);
@@ -271,7 +288,7 @@ module half_chassis() {
   }
 }
 
-translate([-19.5, -30, -7])eraser();
+translate([-19.5, -32, -6.6])eraser(base_weight = base_thick);
 
 module hole_border(size) {
   translate([0, size, 0])

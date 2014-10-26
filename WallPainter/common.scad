@@ -109,28 +109,34 @@ module complex_cylinder_round(internal_radius, height, margin) {
 }
 
 //servo_mg90s();
-
 module servo_mg90s(head_rotation=0, from=45, to=180, steps=0) {
-  color("red")union() {
-    translate([0.5, 0.5, 0])cube([23,23,13]);
-    translate([-4.5, 19, 0])cube([33,3.5,13]);
-    translate([13/2, 0, 13/2])rotate([-90, 0, 0])
+  translate([0, -29/2-3.3, 0])
+  union() {
+    translate([10.4/2, -6/2, 0]) {
+      cube([23,23,12.6], center=true);
+      translate([0, 9.25, 0])cube([32.3,3.5,12.6], center=true);
+    }
+    
     union() {
-      cylinder(r=13/2, h=29);
-      translate([13/2, 0, 0])cylinder(r=3, h=29);
+      rotate([-90, 0, 0]) {
+        cylinder(d=12.6, h=29, center=true);
+        translate([12.6/2, 0, 0])cylinder(r=3, h=29, center=true);
+      }
     }
-    for(i=[from: (to-from)/(steps+1): to]) {
-      translate([13/2, 29, 13/2])rotate([-90, i+head_rotation, 0])servo_head();
-    }
+  }
+  for(i=[from: (to-from)/(steps+1): to]) {
+    rotate([-90, i+head_rotation, 0])servo_head();
   }
 }
 
 module servo_head() {
-  cylinder(d=7, h=5.5);
-  translate([0, 0, 2.5])
-  hull() {
-    cylinder(d=6, h=2.5);
-    translate([14, 0, 0])cylinder(d=4, h=2.5);
+  translate([0, 0, -3.75]) {
+    cylinder(d=7, h=5.5);
+    translate([0, 0, 2.5])
+    hull() {
+      cylinder(d=6, h=2.5);
+      translate([14, 0, 0])cylinder(d=4, h=2.5);
+    }
   }
 }
 
@@ -157,9 +163,9 @@ module pen_holder_testing() {
     }
   }
 }
-intersection(){
-eraser();
-//translate([10, -20, 0])cube([36, 50, 30]);
+intersection() {
+  eraser();
+  //translate([10, -20, 0])cube([36, 50, 30]);
 }
 
 module eraser(base_width = 120, eraser_width=100, base_weight=3) {
@@ -174,7 +180,7 @@ module eraser(base_width = 120, eraser_width=100, base_weight=3) {
       // pestaña al servo
       translate([47, 3.2, 2])rotate([45, 0, 0])
       intersection() {
-        translate([-4.9, -4, 0])cube([9.8, 7.4, 30]);
+        translate([-4.5, -4, 0])cube([9, 7.4, 30]);
         rotate([8, 0, 0])
         translate([-2, 0, 0])union() {
           difference() {
@@ -201,7 +207,7 @@ module eraser(base_width = 120, eraser_width=100, base_weight=3) {
   }
   //servo
   //%	translate([7.3, 15, 23.7])rotate([180, 0, 90])servo_mg90s();
-  %color("violet")translate([14.3, 26.5, 10.7])rotate([180, 180, 90])servo_mg90s(head_rotation=170, steps=4);
+  //%translate([46.7, 20.0, 17.1])rotate([180, 180, 90])servo_mg90s(head_rotation=170, steps=4);
   
   //pen
   %	translate([base_width/2-margins-1.5, 47, 4.6])rotate([-30, 0,0 ])pen();
@@ -217,11 +223,11 @@ module eraser(base_width = 120, eraser_width=100, base_weight=3) {
     }
     translate([42, 15.4, -3])cube([14, 3, 6]);
     
-    translate([29.2, 14.9, -3])cube([4, 5.5, 20]);
-    translate([37, 14.9, -3])cube([4, 5.5, 20]);
-    translate([29.2, 14.9, 16.75])cube([11.8, 5.5, 2]);
-    translate([29.2, 15.8, 9.5])cube([11.8, 4.5, 1]);
-
+    translate([29.2, 14.9, -3])cube([4, 5.2, 20]);
+    translate([37, 14.9, -3])cube([4, 5.2, 20]);
+    translate([29.2, 14.9, 16.25])cube([11.8, 5.2, 1.4]);
+    translate([29.2, 15.8, 9.25])cube([11.8, 4.3, 1]);
+    
     %translate([11, 8, -3])cube([3.2, 7.3, 10]);
     %translate([11, 14.9, -3])cube([15, 2, 10]);
     color("blue")translate([25, -1, -3]) {
@@ -233,21 +239,23 @@ module eraser(base_width = 120, eraser_width=100, base_weight=3) {
       }
       difference() {
         translate([13.5, -17.5, 6.5]) {
-          cube([3.5, 28, 3.5]);
-	  hull(){
-	translate([0, 0, 0])cube([3.5, 2, 3.5]);
-	  translate([0, -6, -5])cube([3.5, 5, 0.1]);}
+          translate([0, 0, 0.5])cube([3.5, 28, 3]);
+          translate([0, 17.5, 0])cube([3.5, 5, 0.5]);
+          hull() {
+            translate([0, 0, 0.5])cube([3.5, 3, 3]);
+            translate([0, -6, -5])cube([3.5, 5, 0.1]);
+          }
         }
         translate([15, 5, 12])rotate([55, 0, 0]) cube([10, 9, 40], center=true);
       }
       translate([8, -10, 13])
-      difference(){
-	      translate([6.4, 0, 0])hull(){
-		      cube([5, 6, 5], center=true);
-		      translate([0.8, 0, -4])cube([3.5, 12, 2], center=true);
-	      }
-	      rotate([0, 90, 0])cylinder(d=1.5, h=10);
-	      translate([-5.2, 2.5, -5])cube([10, 10, 10]);
+      difference() {
+        translate([6.4, 0, 0])hull() {
+          cube([5, 6, 5], center=true);
+          translate([0.8, 0, -4])cube([3.5, 12, 2], center=true);
+        }
+        rotate([0, 90, 0])cylinder(d=1.5, h=10);
+        translate([-5, 2.5, -5])cube([10, 10, 10]);
       }
     }
     rotate([0, 90, 0])rotate([0, 0, 90])eraser_holder(internal_diameter=2.1, h=9.5);

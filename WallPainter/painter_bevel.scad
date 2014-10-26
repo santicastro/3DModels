@@ -199,15 +199,16 @@ module half_chassis(isLeft=0) {
           }
         }
         //m3 translate([0, 5, 6])rotate([90, 0, 180])m3_hole();
-        if(isLeft==1){
-	   translate([13.5, -2, 0])cube([4,3,20]);
- 	   translate([-5, -10.5, 0])cube([15, 5, 18]);
+        if(isLeft==1) {
+          translate([13.5, -3.3, 0])cube([4,3,20]);
+          translate([-5, -10.5, 0])cube([15, 5, 18]);
+          translate([-5, -10.5, 4+4.5])cube([6, 6, 5]);
         }
       }
       translate([0,0,18])
       semiarc(21.5+0.8, 30, wall_thick, 10, 120) {
         double_hole_border(wall_thick);
-      };
+      }
       difference() {
         semiarc(21.5, 31.15, wall_thick, 0-isLeft*5, 360-isLeft*125) {
           translate([0, 18, 0]) {
@@ -222,16 +223,16 @@ module half_chassis(isLeft=0) {
           square([pulley_thickness,pulley_thickness]);
         };
         /*translate([0, 25, 6])rotate([0,45,0])cube([6, 20, 6], center=true);*/
-	if(isLeft==1){
-	   translate([13.5, -2, 0])cube([4,3,20]);
+        if(isLeft==1) {
+          translate([13.5, -2, 0])cube([4,3,20]);
         }
       }
       //translate([31, 0, 0])cube_semiarc(8, 31.15, wall_thick, 90, 180);
-      translate([22.5, -2, 18])difference(){
-	      cube([8, 6.25, 13]);
-	      translate([8, 0, 5.25])rotate([90, 0, 0])cylinder(d=10, h=30, center=true);
-	      translate([5.8, -1, 0])rotate([0, 23, 0])cube([10, 20, 10], center=true);
-	      translate([11.8, -1, 7.8])rotate([0, 55, 0])cube([10, 20, 10], center=true);
+      translate([22.5, -2, 18])difference() {
+        cube([8, 6.25, 13]);
+        //translate([8, 0, 5.25])rotate([90, 0, 0])cylinder(d=10, h=30, center=true);
+        translate([6.6, -1, 2])rotate([0, 23, 0])cube([10, 20, 10], center=true);
+        translate([9, -1, 3.5])cube([10, 20, 10], center=true);
       }
       translate([-18.5+1, -26.7+1.4, 0]) color("red")
       cube_semiarc(9.5-2, 31.15, wall_thick, 55, 140);

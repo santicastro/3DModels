@@ -149,40 +149,16 @@ translate ([0,0,pitch_apex1+20]) {
         translate([0,4,3])rotate([-90,0,0]) m3_hole();
         translate([0,-4,3])rotate([-90,0,180]) m3_hole();
       }
-      
       if(small_gear_moved==0) translate([0,0,-42.2]) nema17(false, true, true, true);
     }
   }
 }
-/*
-rotate([0,0,90])
-translate ([0,0,pitch_apex1+20])
-translate(small_gear_translation)rotate(small_gear_rotation)rotate([0,(pitch_angle1+pitch_angle2),-9])
-translate([0,0,-pitch_apex2])
-translate([0,0,-42.2+1]) union() {
-  translate([-42.3/2, -42.3/2, -6]) rounded_cube(42.3, 42.3, 7, 5.5, 0.35);
-  nema17(false, true, true, true);
-}*/
 
 wall_thick = 1.5;
 // chassis
 if(show_chassis) {
   half_chassis(isLeft=1);
   translate([61, 0, 0])mirror([1,0, 0])half_chassis();
-  /*translate([21, -50, 3])rotate([-90, 0, -90]) {
-    difference() {
-      union() {
-        cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);
-      } cylinder(d=3.2, h=4);
-    }
-    translate([0, 0, 15]) {
-      difference() {
-        {
-          cylinder(d=6, h=4); translate([-3, 0, 0])cube([6,5,4]);
-        } cylinder(d=3.2, h=4);
-      }
-    }
-  }*/
 }
 module half_chassis(isLeft=0) {
   wall_angle=60;
@@ -234,47 +210,20 @@ module half_chassis(isLeft=0) {
         };
         /*translate([0, 25, 6])rotate([0,45,0])cube([6, 20, 6], center=true);*/
         if(isLeft==1) {
-          translate([13.5, -2, 0])cube([4,3,20]);
+          translate([13.5, -2.5, 0])cube([4,3,20]);
         }
       }
-      //translate([31, 0, 0])cube_semiarc(8, 31.15, wall_thick, 90, 180);
-      translate([22.5, -2, 18])difference() {
-        cube([8, 6.25, 13]);
-        //translate([8, 0, 5.25])rotate([90, 0, 0])cylinder(d=10, h=30, center=true);
-        translate([6.6, -1, 2])rotate([0, 23, 0])cube([10, 20, 10], center=true);
-        translate([9, -1, 3.5])cube([10, 20, 10], center=true);
+      
+      translate([21.5, -3, 18])difference() {
+        cube([9, 8.25, 13]);
+        translate([7.6, -1, 2])rotate([0, 27, 0])cube([10, 20, 10], center=true);
+        translate([10.5, -1, 4])cube([10, 20, 10], center=true);
+        if(isLeft!=1) {
+          translate([7,4,10])cylinder(d=3, h=10);
+        }
       }
       translate([-18.5+1, -26.7+1.4, 0]) color("red")
       cube_semiarc(9.5-2, 31.15, wall_thick, 55, 140);
-      if(false) {
-        %difference() {
-          rotate([0, 0, -9])translate([0, -63.95, 13.45])
-          union() {
-            intersection() {
-              rotate([-45, 0, 0])translate([2.5,2,17.5])cube([44, 42, 37], center=true);
-              union() {
-                translate([45/2-1, 11, -17]) difference() {
-                  cube([4, 8, 70]);
-                  translate([13, 9, 0]) cylinder(r=12, h=70);
-                }
-                rotate([-45, 0, 0])translate([0,0,17]) {
-                  translate([8, -22, 17]) {
-                    cube([15, 45, 2]); translate([-31,29,0])cube([35, 17, 2]);
-                  }
-                  difference() {
-                    translate([-10, 0, -19]) cube([20.3, 22, 2]); translate([0, 0, -20])cylinder(d=10, h=20);
-                  }
-                }
-              }
-            }
-            translate([-10, -0.5, -17])cube([1.2, 16, 16]);
-            translate([9, -0.5, -17])cube([1.2, 16, 16]);
-            
-          }
-          rotate([0, 0, -9])translate([0, -63.95, 13.45])
-          rotate([-45, 0, 0])nema17(true, true, true);
-        }
-      }
       
       color("red")translate([-10, -63.1, 13.4]) rotate([-45, 0, -9])
       translate([-42.3/2, -42.3/2, -7]) difference() {
@@ -288,20 +237,6 @@ module half_chassis(isLeft=0) {
       // B A C K G R O U N D
       translate([0, 0, -base_thick]) {
         cylinder(r=11+wall_thick, h=base_thick);
-        //translate([31, 0, 0])	cylinder(r=8+wall_thick, h=base_thick);
-        /*translate([0, -60, 0])
-        linear_extrude(height = base_thick)
-        difference() {
-          polygon(points=[
-          [32, 60],
-          [-8, 60],
-          [-28-wall_thick, 36.5],
-          [-28-wall_thick, -27],
-          [-28-wall_thick, -49],
-          [32, -49],
-          [32, 40]
-          ]);
-        }*/
       }
       
     }

@@ -146,33 +146,7 @@ module servo_head() {
   }
 }
 
-module pen_holder_testing() {
-  // móvil
-  rotate([0, 90, 0]) //eje
-  intersection() {
-    translate([-1, 0, 0])cylinder(d=3, h=15, $fn=30);
-    translate([-3, -1.5, 0])cube([3, 3, 15]);
-  }
-  difference() {
-    cube([15, 30, 1.6]);
-    translate([3, 0, 0]) cube([9, 4.4, 5]);
-  }
-  
-  //base
-  translate([20, 0, 0])union() {
-    cube([20, 15, 1.2]);
-    rotate([0, 90, 0])
-    translate([-1.55-1.2-0.8, 6, 6])difference() {
-      cylinder(d=7, h=8.5, $fn=20);
-      cylinder(d=3.1, h=8.5, $fn=20);
-      translate([-3, 0, 8.5/2])cube([6, 1.95, 8.5], center=true);
-    }
-  }
-}
-intersection() {
-  eraser();
-  //translate([10, -20, 0])cube([36, 50, 30]);
-}
+eraser();
 
 module eraser(base_width = 124, eraser_width=100, base_weight=3) {
   hole_width = eraser_width/2 - 2.5;
@@ -203,11 +177,14 @@ module eraser(base_width = 124, eraser_width=100, base_weight=3) {
     }
     
     union() {
-      rotate([-45])cube([eraser_width, 50, 50]);
+      rotate([-45])translate([-0.5,0])cube([eraser_width+1, 20, 20]);
       //agujeros del cuerpo soporte de fieltro
-      translate([2,1.1]) union() {
-        cube([hole_width, 4.8, 8]);
-        translate([hole_width+1, 0, 0])cube([hole_width, 4.8, 8]);
+      translate([2,1.1]) difference() {
+        union() {
+          cube([hole_width, 4.8, 8]);
+          translate([hole_width+1, 0, 0])cube([hole_width, 4.8, 8]);
+        }
+        translate([0, 1.5, 0])cube([eraser_width, 1.8, 6.75]);
       }
     }
   }
@@ -216,7 +193,7 @@ module eraser(base_width = 124, eraser_width=100, base_weight=3) {
   %translate([46.7, 20.0, 17.1])rotate([180, 180, 90])servo_mg90s(head_rotation=170, steps=4);
   
   //pen
-  %	translate([base_width/2-margins-1.5, 47, 4.6])rotate([-30, 0,0 ])pen();
+  %	translate([base_width/2-margins-0, 49, 5])rotate([-37, 0,0 ])pen();
   
   //base
   translate([0, 11.5, 7.2])
@@ -227,15 +204,15 @@ module eraser(base_width = 124, eraser_width=100, base_weight=3) {
       translate([-5, 28, -4])rotate([0, 0, 35])cube([40, 20, 10], center=true);
       translate([base_width-20, 28, -4])rotate([0, 0, -35])cube([40, 20, 10], center=true);
     }
-    translate([42, 15.4, -3])cube([14, 3, 6]);
+    translate([43, 17.4, -3])cube([14, 3, 4]);
     
     translate([29.2, 14.9, -3])cube([4, 5.2, 20]);
     translate([37, 14.9, -3])cube([4, 5.2, 20]);
     translate([29.2, 14.9, 16.25])cube([11.8, 5.2, 1.4]);
     translate([29.2, 15.8, 9.25])cube([11.8, 4.3, 1]);
     
-    %translate([11, 8, -3])cube([3.2, 7.3, 10]);
-    %translate([11, 14.9, -3])cube([15, 2, 10]);
+    //%translate([11, 8, -3])cube([3.2, 7.3, 10]);
+    //%translate([11, 14.9, -3])cube([15, 2, 10]);
     color("blue")translate([25, -1, -3]) {
       difference() {
         // servo support bridge
@@ -268,42 +245,43 @@ module eraser(base_width = 124, eraser_width=100, base_weight=3) {
     translate([eraser_width-9.5, 0, 0])rotate([0, 90, 0])rotate([0, 0, 90])eraser_holder(internal_diameter=2.1, h=9.5);
     
     //  pen_holder_support
-    /*
-    translate([40.7,-23.5, 6.3])rotate([0, 90, 0])eraser_holder(internal_diameter= 3.2, h=8);
-    translate([55.3,-23.5, 6.3])rotate([0, 90, 0])eraser_holder(internal_diameter= 3.2, h=8);
-    translate([40.7,-26.5, 0])cube([22.6, 6, 2.5]);*/
+    translate([38,-23.2, 9.3])rotate([0, 90, 0])eraser_holder(internal_diameter= 3.1, h=4);
+    translate([51,-23.2, 9.3])rotate([0, 90, 0])eraser_holder(internal_diameter= 3.1, h=4);
+    translate([64,-23.2, 9.3])rotate([0, 90, 0])eraser_holder(internal_diameter= 3.1, h=4);
+    translate([38,-26.2, -2.4])cube([26+4, 6, 5.5+2.4]);
   }
   /////////////////////////////////////////////
-  //color("blue")translate([38, -12, 10.5])pen_holder();
+  color("blue")translate([39.25, -12, 10.5+3])rotate([-7, 0, 0])pen_holder();
   /////////////////////////////////////////////
 }
 
 module pen_holder() {
   protector_angle = 30;
-  tower_height = 8;
+  tower_height = 8.5;
   //holder base
   difference() {
     union() {
-      difference() {
-        cube([21, 80, 3]);
-        translate([0, 39/2+9/2, 0])cube([14*2, 30, 3.1*2], center=true);
+      translate([3, 0, 0])cube([21.5, 10, 3]);
+      translate([16, 0, 0])rotate([0,0,10])rounded_cube(10, 50, 3,4);
+      hull() {
+        translate([0.4, 53, 0])rounded_cube(20, 25, 3, 4);
+        translate([4.4, 38, 0])rounded_cube(12, 15, 3, 4);
       }
-      translate([-1, 0, 0])cube([30, 10, 3]);
-      translate([14, 0, 3])rotate([0, 90, 0])cylinder(d=6, h=30, $fn=25, center=true);
+      translate([13.75, 0, 3])rotate([0, 90, 0])cylinder(d=6, h=21.5, $fn=25, center=true);
     }
-    translate([6.6, 0, 2])rotate([0, 90, 0])cylinder(d=8.5, h=8.5, $fn=25, center=true);
-    translate([21.3, 0, 2])rotate([0, 90, 0])cylinder(d=8.5, h=8.5, $fn=25, center=true);
-    translate([14, 0, 3])rotate([0, 90, 0])cylinder(d=3.15, h=30+1, $fn=25, center=true);
+    translate([24.5, 0, 0]) cube([10, 10, 4]);
+    translate([13.75, 0, 2])rotate([0, 90, 0])cylinder(d=8.5, h=4.5, $fn=25, center=true);
+    translate([14, 0, 3])rotate([0, 90, 0])cylinder(d=3.2, h=30+1, $fn=25, center=true);
     translate([10.5, 59.6, -5])rotate([-protector_angle, 0, 0])translate([0, 0, 5])union() {
-      cylinder(d=16, h=15);
+      //cylinder(d=16, h=15);
       cylinder(d=10, h=30, center=true);
     }
   }
   
   //tower
-  translate([11.5, 42, 0])rotate([0, -90, 0])union() {
+  translate([10.25, 41, 0])rotate([0, -90, 0])union() {
     hull() {
-      translate([0, -5.5, 0])cube([1, 8.5, 5]);
+      translate([0, -4.5, 0])cube([1, 7.5, 5]);
       translate([tower_height, 0, 0])cylinder(d=4, h=5);
     }
     translate([tower_height, 0, 0])cylinder(d=6, h=1.15);
@@ -314,10 +292,10 @@ module pen_holder() {
   translate([10.5, 90, 48])
   difference() {
     rotate([-protector_angle, 0, 0])difference() {
-      union() {
-        cylinder(d=20.5, h=120, center = true);
-        translate([0, -10.25, 0])cylinder(d=3, h=120, center=true, $fn=10);
-        translate([0, 10.25, 0])cylinder(d=3, h=120, center=true, $fn=10);
+      translate([0, 0, -60])union() {
+        cylinder(d=20.5, h=80);
+        translate([0, -10.25, 0])cylinder(d=3, h=80, $fn=10);
+        translate([0, 10.25, 0])cylinder(d=3, h=80, $fn=10);
       }
       cylinder(d=17.5, h=122, center=true);
       translate([6, 0, -70])rotate([45, 0, 0])cube([15, 30, 30]);
@@ -354,11 +332,12 @@ module pen() {
   }
 }
 
-module rounded_cube(x, y, z, radius, margin=0){
-translate([radius, radius, 0])hull() {
+module rounded_cube(x, y, z, radius, margin=0) {
+  translate([radius, radius, 0])hull() {
     cylinder(r=radius-margin, h=z);
     translate([x-radius*2, 0, 0])cylinder(r=radius-margin, h=z);
     translate([0, y-radius*2, 0])cylinder(r=radius-margin, h=z);
     translate([x-radius*2, y-radius*2, 0])cylinder(r=radius-margin, h=z);
   }
 }
+

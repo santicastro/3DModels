@@ -32,7 +32,7 @@ half_pulley_rotation = [0, 0, 0];
 
 show_small_gear = false;
 small_gear_moved = 0; //0 false, 1 true
-small_gear_translation = [150 * small_gear_moved, 0, 0];
+small_gear_translation = [150 * small_gear_moved, 0, 0+17];
 small_gear_rotation = [0, -45 * small_gear_moved, 0];
 
 show_chassis = true;
@@ -150,10 +150,20 @@ translate ([0,0,pitch_apex1+20]) {
         translate([0,-4,3])rotate([-90,0,180]) m3_hole();
       }
       
-      if(small_gear_moved==0) translate([0,0,-42.2]) nema17(true, true, true);
+      if(small_gear_moved==0) translate([0,0,-42.2]) nema17(false, true, true, true);
     }
   }
 }
+/*
+rotate([0,0,90])
+translate ([0,0,pitch_apex1+20])
+translate(small_gear_translation)rotate(small_gear_rotation)rotate([0,(pitch_angle1+pitch_angle2),-9])
+translate([0,0,-pitch_apex2])
+translate([0,0,-42.2+1]) union() {
+  translate([-42.3/2, -42.3/2, -6]) rounded_cube(42.3, 42.3, 7, 5.5, 0.35);
+  nema17(false, true, true, true);
+}*/
+
 wall_thick = 1.5;
 // chassis
 if(show_chassis) {
@@ -236,34 +246,44 @@ module half_chassis(isLeft=0) {
       }
       translate([-18.5+1, -26.7+1.4, 0]) color("red")
       cube_semiarc(9.5-2, 31.15, wall_thick, 55, 140);
-      
-      %difference() {
-        rotate([0, 0, -9])translate([0, -63.95, 13.45])
-        union() {
-          intersection() {
-            rotate([-45, 0, 0])translate([2.5,2,17.5])cube([44, 42, 37], center=true);
-            union() {
-              translate([45/2-1, 11, -17]) difference() {
-                cube([4, 8, 70]);
-                translate([13, 9, 0]) cylinder(r=12, h=70);
-              }
-              rotate([-45, 0, 0])translate([0,0,17]) {
-                translate([8, -22, 17]) {
-                  cube([15, 45, 2]); translate([-31,29,0])cube([35, 17, 2]);
+      if(false) {
+        %difference() {
+          rotate([0, 0, -9])translate([0, -63.95, 13.45])
+          union() {
+            intersection() {
+              rotate([-45, 0, 0])translate([2.5,2,17.5])cube([44, 42, 37], center=true);
+              union() {
+                translate([45/2-1, 11, -17]) difference() {
+                  cube([4, 8, 70]);
+                  translate([13, 9, 0]) cylinder(r=12, h=70);
                 }
-                difference() {
-                  translate([-10, 0, -19]) cube([20.3, 22, 2]); translate([0, 0, -20])cylinder(d=10, h=20);
+                rotate([-45, 0, 0])translate([0,0,17]) {
+                  translate([8, -22, 17]) {
+                    cube([15, 45, 2]); translate([-31,29,0])cube([35, 17, 2]);
+                  }
+                  difference() {
+                    translate([-10, 0, -19]) cube([20.3, 22, 2]); translate([0, 0, -20])cylinder(d=10, h=20);
+                  }
                 }
               }
             }
+            translate([-10, -0.5, -17])cube([1.2, 16, 16]);
+            translate([9, -0.5, -17])cube([1.2, 16, 16]);
+            
           }
-          translate([-10, -0.5, -17])cube([1.2, 16, 16]);
-          translate([9, -0.5, -17])cube([1.2, 16, 16]);
-          
+          rotate([0, 0, -9])translate([0, -63.95, 13.45])
+          rotate([-45, 0, 0])nema17(true, true, true);
         }
-        rotate([0, 0, -9])translate([0, -63.95, 13.45])
-        rotate([-45, 0, 0])nema17(true, true, true);
       }
+      
+      color("red")translate([-10, -63.1, 13.4]) rotate([-45, 0, -9])
+      translate([-42.3/2, -42.3/2, -7]) difference() {
+        rounded_cube(42.3, 42.3, 7, 5.5, 0.35);
+        translate([42.3/2, 42.3/2,-1])cylinder(r=7, h=20);
+      }
+      translate([-16, -82, -2.4])rotate([0, 0, -9])cube([8, 10, 25.4]);
+      
+      translate([-31.5, -52-25-7, -2.4])cube([62, 42, 2.4]);
       
       // B A C K G R O U N D
       translate([0, 0, -base_thick]) {
@@ -283,12 +303,13 @@ module half_chassis(isLeft=0) {
           ]);
         }*/
       }
+      
     }
     translate([0, 0, -5-2.4])cube([200, 300, 10], center=true);
     translate([0,0,-3])cylinder(r=3, h=5);
+    translate([-10, -63.1, 13.4]) rotate([-45, 0, -9])nema17(false, true, true, true);
   }
 }
-
 translate([-19.5, -32, -6.6])eraser(base_weight = base_thick);
 
 module hole_border(size) {

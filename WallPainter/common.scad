@@ -10,7 +10,6 @@ module m3_hole() {
   translate([0,0,-4])cylinder(r=1.6,h=16);
 }
 
-//nema17(true, true, true);
 module nema14(show_screws = false, show_body=true) {
   if(show_body) {
     cylinder(r=2.5, h=54);
@@ -25,32 +24,39 @@ module nema14(show_screws = false, show_body=true) {
   }
 }
 
-module nema17(show_screws = false, show_body=true, big_holes=false) {
+//nema17(true, true, true, true);
+module nema17(front_screws = false, bottom_screws = false,show_body=true, big_holes=false) {
+  $fn=15;
   screw_holes_length = 10;
+  full_screw_holes_length = screw_holes_length*2 + 34;
   if(show_body) {
     cylinder(r=2.5, h=34+24);
     cylinder(r=11.3, h=34+2);
     translate([-21, -21, 0]) cube([42.3, 42.3, 34]);
   }
-  if(show_screws) {
-    hull() {
-      translate([15.5, 15.5, 34]) cylinder(r=1.55, h=screw_holes_length);
-      if(big_holes) translate([13, 13, 34]) cylinder(r=1.55, h=screw_holes_length);
+  if(front_screws) {
+    translate([0, 0, 34])for(i = [0 : 90 : 270]) {
+      rotate([0, 0, i])nema_screw_hole();
     }
-    hull() {
-      translate([-15.5, 15.5, 34]) cylinder(r=1.55, h=screw_holes_length);
-      if(big_holes) translate([-13, 13, 34]) cylinder(r=1.55, h=screw_holes_length);
-    }
-    hull() {
-      translate([15.5, -15.5, 34]) cylinder(r=1.55, h=screw_holes_length);
-      if(big_holes) translate([13, -13, 34]) cylinder(r=1.55, h=screw_holes_length);
-    }
-    hull() {
-      translate([-15.5, -15.5, 34]) cylinder(r=1.55, h=screw_holes_length);
-      if(big_holes) translate([-13, -13, 34]) cylinder(r=1.55, h=screw_holes_length);
-    }
-    
   }
+  if(bottom_screws) {
+    for(i = [0 : 90 : 270]) {
+      rotate([180, 0, i])nema_screw_hole();
+    }
+  }
+}
+//nema_screw_hole(screw_holes_length=10, head_hole_length = 5);
+module nema_screw_hole(screw_holes_length=5, head_hole_length = 10, big_holes=true) {
+  $fn=15;
+  hull() {
+    translate([15.5, 15.5, 0]) cylinder(r=1.55, h=screw_holes_length);
+    if(big_holes) translate([13, 13, 0]) cylinder(r=1.55, h=screw_holes_length);
+  }
+  hull() {
+    translate([15.5, 15.5, screw_holes_length]) cylinder(r=5.5, h=head_hole_length);
+    if(big_holes) translate([13, 13, screw_holes_length]) cylinder(r=5.5, h=head_hole_length);
+  }
+  
 }
 
 module semiarc(r, h, weight, angle_start, angle_finish) {
@@ -168,7 +174,7 @@ intersection() {
   //translate([10, -20, 0])cube([36, 50, 30]);
 }
 
-module eraser(base_width = 120, eraser_width=100, base_weight=3) {
+module eraser(base_width = 124, eraser_width=100, base_weight=3) {
   hole_width = eraser_width/2 - 2.5;
   margins = (base_width - eraser_width) / 2;
   //mobile part
@@ -207,7 +213,7 @@ module eraser(base_width = 120, eraser_width=100, base_weight=3) {
   }
   //servo
   //%	translate([7.3, 15, 23.7])rotate([180, 0, 90])servo_mg90s();
-  //%translate([46.7, 20.0, 17.1])rotate([180, 180, 90])servo_mg90s(head_rotation=170, steps=4);
+  %translate([46.7, 20.0, 17.1])rotate([180, 180, 90])servo_mg90s(head_rotation=170, steps=4);
   
   //pen
   %	translate([base_width/2-margins-1.5, 47, 4.6])rotate([-30, 0,0 ])pen();
@@ -216,9 +222,9 @@ module eraser(base_width = 120, eraser_width=100, base_weight=3) {
   translate([0, 11.5, 7.2])
   union() {
     color("green")difference() {
-      translate([-margins, 3.4-30, -3])cube([base_width, 47, base_weight]);
+      translate([-margins, 3.4-30+5, -3])cube([base_width, 47-5, base_weight]);
       translate([-2, -17, -4])cube([eraser_width + 4, 20.8, 10]);
-      translate([0, 28, -4])rotate([0, 0, 35])cube([40, 20, 10], center=true);
+      translate([-5, 28, -4])rotate([0, 0, 35])cube([40, 20, 10], center=true);
       translate([base_width-20, 28, -4])rotate([0, 0, -35])cube([40, 20, 10], center=true);
     }
     translate([42, 15.4, -3])cube([14, 3, 6]);
@@ -348,3 +354,11 @@ module pen() {
   }
 }
 
+module rounded_cube(x, y, z, radius, margin=0){
+translate([radius, radius, 0])hull() {
+    cylinder(r=radius-margin, h=z);
+    translate([x-radius*2, 0, 0])cylinder(r=radius-margin, h=z);
+    translate([0, y-radius*2, 0])cylinder(r=radius-margin, h=z);
+    translate([x-radius*2, y-radius*2, 0])cylinder(r=radius-margin, h=z);
+  }
+}

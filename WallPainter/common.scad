@@ -388,6 +388,61 @@ module rounded_cube(x, y, z, radius, margin=0) {
 //mirror([1, 0, 0]) top_holder();
 
 module top_holder() {
+  arm_thick = 6;
+  margin = 0.05;
+  wall_thick = 1.5;
+  blackboard_border_thick = 16.3;
+  holder_thick = wall_thick * 2 + blackboard_border_thick;
+  
+  //anti warping
+  difference() {
+    translate([-5, -5])cube([holder_thick+10, 10, 0.4]);
+    cylinder(d=5, $fn=10);
+    translate([holder_thick/2, 0, 0])cylinder(d=5, $fn=10);
+    translate([holder_thick, 0, 0])cylinder(d=5, $fn=10);
+  }
+  // blackboard support
+  difference(){
+      union(){
+  difference() {
+    cube([holder_thick, 50, 50]);
+    translate([wall_thick, -margin, wall_thick])
+    cube([blackboard_border_thick, 50-wall_thick+margin, 50-wall_thick+margin]);
+    translate([-margin/2, -blackboard_border_thick, blackboard_border_thick])
+    cube([holder_thick+margin, 50-wall_thick, 50-wall_thick]);
+    translate([-margin, 0, 8]) rotate([45, 0, 0])cube([holder_thick+margin*2, 80, 80]);
+    
+    //screw
+    translate([holder_thick/2, 24, -margin]) cylinder(d=3, h=10, $fn=10);
+  }
+  translate([(holder_thick/2)-2.5, 50, 0])
+  union() {
+    intersection() {
+      cube([8, 50, 50]);
+      translate([2.5, 15, 21])rotate([60, 0, 0])translate([0,-13,0])cube([5, 35, 75], center=true);
+    }
+  }
+  translate([9.5, 51.2, 40])rotate([90, 0])cylinder(d=15, h=1.2);
+  }
+      translate([9.5, 51.2, 40])rotate([90, 0])cylinder(d=2.5, h=5, $fn=15);
+  }
+  // big arm
+  translate([0, 50, 0]) cube([holder_thick, 102, arm_thick]);
+  
+  // cadeneta_holder
+  difference() {
+    translate([0, 138, 0]) {
+      rounded_cube(holder_thick+40, 20, arm_thick, 3);
+    }
+    for(i = [holder_thick: 6.8 : (holder_thick+40)]) {
+      union() {
+        translate([i, 160-6, -margin]) cube([1.7, 5, 20]);
+        translate([i+1, 160-6+0.85, -margin]) sphere(d=6, center=true, $fn=25);
+      }
+    }
+  }
+}
+module top_holder_v0() {
   arm_thick = 4.4;
   margin = 0.05;
   wall_thick = 1.5;

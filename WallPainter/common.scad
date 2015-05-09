@@ -270,28 +270,28 @@ module eraser(base_width = 125, eraser_width=100, base_weight=3, show_pen_holder
 }
 
 pen_holder();
-%translate([10, 56])translate([base_width/2-margins-0, 49, 5])rotate([-90+27, 0,0 ])pen();
+%translate([10, 56])translate([base_width/2-margins-0, 49, 5])rotate([-90+32, 0,0 ])pen();
 
 module pen_holder() {
   protector_angle = 65;
-  tower_height = 8.5;
+  tower_height = 8.5+0.75;
   //holder base
   difference() {
     union() {
-      translate([3, 0+4.2, 0])cube([21.5, 10-4.2, 3*2]);
+      translate([3, 0+4.2, 0])cube([21.5, 10-4.2, 6.4]);
       difference() {
         translate([16, 0, 0])rotate([0,0,9])rounded_cube(10, 50, 3, 4);
         cube([30, 4.2, 3.1]);
       }
       hull() {
-        translate([-0.6, 50, 0])cube([22, 15, 3]);
+        translate([-1.5, 52, 0])cube([23, 13, 3]);
         translate([4.4, 38, 0])rounded_cube(12, 15, 3, 4);
       }
       translate([13.75, 4.2, 3])rotate([0, 90, 0])cylinder(d=6.3, h=21.5, $fn=25, center=true);
       translate([-0.8, 45, 0])rounded_cube(23.2, 6, 3, 1.5);
       translate([-0.5, 0, -4])hull() {
-        translate([10.5, 50, 7]) cylinder(d=12, h=4.5, center=true);
-        translate([10.5, 66, 7+5.5]) cylinder(d=22, h=16, center=true);
+        translate([10.5, 48, 7]) cylinder(d=12, h=4.5, center=true);
+        translate([10.5, 64, 7+5.5]) cylinder(d=23, h=16, center=true);
       }
     }
     
@@ -300,11 +300,11 @@ module pen_holder() {
     translate([14, 4.2, 3])rotate([0, 90, 0])cylinder(d=3.2, h=30+1, $fn=25, center=true);
     translate([10.5, 59.6, 2])cube(d=12, h=30, center=true);
     translate([-0.5, 0])hull() {
-      translate([10.5, 50, 7]) cylinder(d=8, h=30, center=true);
-      translate([10.5, 66, 7]) cylinder(d=18, h=30, center=true);
+      translate([10.5, 48, 7]) cylinder(d=8, h=30, center=true);
+      translate([10.5, 64, 7]) cylinder(d=19, h=30, center=true);
     }
-    translate([-10, 44, 4])rotate([27, 0, 0])cube([50, 100, 50]);
-    translate([-10, 66, 0])cube([50, 100, 50]);
+    translate([-10, 42, 4])rotate([25, 0, 0])cube([50, 100, 50]);
+    translate([-10, 64, 0])cube([50, 100, 50]);
   }
   
   //tower
@@ -326,20 +326,23 @@ module pen_holder() {
 module pen_holder_half() {
   intersection() {
     union() {
-      hull() {
-        translate([8.7, 14]) cube([2.3, 0.1, 14.5]);
-        translate([8.7, 14+35, 20]) cube([2.3, 0.1, 2]);
+      translate([9.2, 12])hull() {
+        cube([2.3, 0.1, 14.5]);
+        translate([0, 35, 23]) cube([2.3, 0.1, 2]);
       }
       intersection() {
-        translate([5.2, 20, 0])rotate([0, 0, 30.5])rotate([0, 45, 0])cube([1.5, 120, 80]);
-        translate([-10, 31.5, 0])rotate([27, 0, 0])cube([21, 95, 10]);
-        translate([-0, 0, 6.5+3])cube([50, 105, 50]);
+        translate([5.2, 20, 1.8])rotate([0, 0, 38.6])rotate([0, 45, 0])cube([1.7, 120, 80]);
+        translate([-10, 31.5, 0])rotate([32, 0, 0])cube([21.5, 95, 10]);
+        translate([-0, 0, 6.5+6])cube([50, 105, 50]);
       }
       
-      translate([8.7, 15, 0])rotate([27, 0, 0])cube([2.3, 103.2, 4]);
-      translate([8.7, 101, 51]) rotate([0, 90, 0])
+      translate([9.2, 13, 0])rotate([32, 0, 0])cube([2.3, 112, 4]);
+      translate([9.2, 101.5, 62]) rotate([0, 90, 0])
       difference() {
-        cylinder(h= 3, d=8, $fn = 10);
+        hull(){
+            translate([6.5, -4, 0])cylinder(h= 2, d=5, $fn = 10);
+            cylinder(h= 3, d=8, $fn = 10);
+        }
         cylinder(h= 4, d=1, $fn = 10);
       }
       
@@ -347,24 +350,24 @@ module pen_holder_half() {
       color("green") union() {
         intersection() {
           cube([50, 50, 20]);
-          translate([8.8, 14, -0.5])rotate([27, 0, 0])rotate([0, 45, 0])cube([1.6, 21.4, 1.6]);
+          translate([8.8, 14, 0.5])rotate([32, 0, 0])rotate([0, 45, 0])cube([1.6, 22, 1.6]);
         }
         translate([9.5+0.2, 14, 0])cube([0.6, 19, 14]);
         
       }
       color("red") union() {
-        translate([9, 32, 9.5])rotate([0, 0, 30])rotate([0, 45, 0])cube([1.6, 20, 1.6]);
-        translate([9+0.8+0.25, 32, 0])rotate([0, 0, 30])cube([0.6, 21, 9.5]);
+        translate([9, 32.5, 12.5])rotate([0, 0, 38])rotate([0, 45, 0])cube([1.6, 20, 1.6]);
+        translate([9+0.8+0.25, 32.5, 0])rotate([0, 0, 38])cube([0.6, 21, 12.5]);
       }
       color("violet") union() {
-        translate([-1, 48.5, 8.7])rotate([27, 0, 0])rotate([0, 45, 0])cube([1.5, 63.5, 1.5]);
+        translate([-1, 46, 12.5])rotate([32, 0, 0])rotate([0, 45, 0])cube([1.5, 70, 1.5]);
         intersection() {
-          translate([0, 48.5, 0])cube([0.3, 56.5, 41]);
-          translate([-1, 48.5, -35])rotate([27, 0, 0])cube([5, 83, 40]);
+          translate([0, 46, 0])cube([0.3, 60, 50]);
+          translate([-1, 52, -33])rotate([32, 0, 0])cube([5, 90, 41]);
         }
       }
     }
-    cube([40, 105, 60]);
+    cube([40, 105, 70]);
   }
 }
 

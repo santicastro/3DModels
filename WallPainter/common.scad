@@ -103,15 +103,14 @@ module cylinder_round(internal_radius, height, margin) {
   complex_cylinder_round(internal_radius, height, margin) {
     difference() {
       translate([-margin, -margin, 0]) square(delta_radius + margin);
-      translate([delta_radius,delta_radius,0]) circle(delta_radius);
+      translate([delta_radius,delta_radius,0]) circle(delta_radius, $fn=30);
     }
   };
 }
 
 module complex_cylinder_round(internal_radius, height, margin) {
   rotate_extrude(convexity = 20)
-  translate([internal_radius, 0, 0])rotate([90,0,0])rotate([0,180,0])
-  children(0);
+  translate([internal_radius, 0, 0])rotate([0,180,0]) children(0);
 }
 
 //servo_mg90s();
@@ -269,8 +268,8 @@ module eraser(base_width = 125, eraser_width=100, base_weight=3, show_pen_holder
   /////////////////////////////////////////////
 }
 
-pen_holder();
-%translate([10, 56])translate([base_width/2-margins-0, 49, 5])rotate([-90+32, 0,0 ])pen();
+//pen_holder();
+//%translate([10, 56])translate([base_width/2-margins-0, 49, 5])rotate([-90+32, 0,0 ])pen();
 
 module pen_holder() {
   protector_angle = 65;
